@@ -1,0 +1,32 @@
+
+.PHONY : notify\:deploy-starting \
+        notify\:deploy-success \
+        notify\:deploy-failure \
+        verify-env
+
+CURL := curl --silent -X POST -H "Content-type: application/json" -d @- 'https://app.datadoghq.com/api/v1/events?api_key=$(DATADOG_API_KEY)' > /dev/null
+
+# Ensures that a variable is defined
+define assert
+  @[ -n "$$$1" ] || (echo "$(1) not defined in $(@)"; exit 1)
+endef
+
+verify-env:
+	$(call assert,APP)
+	$(call assert,DATADOG_API_KEY)
+	$(call assert,CLUSTER_NAMESPACE)
+	$(call assert,IMAGE_TAG)
+	$(call assert,CIRCLE_BUILD_NUM)
+	$(call assert,CIRCLE_BRANCH)
+
+## Notify datadog a deploy is starting
+notify\:deploy-starting: verify-env
+	@envsubst < $(MAKEFILE_DIR)/modules/datadog/deploy-starting.json | $(CURL)
+
+## Notify datadog a deploy was successful
+notify\:deploy-success: verify-env
+	@envsubst < $(MAKEFILE_DIR)/modules/datadog/deploy-success.json | $(CURL)
+
+## Notify datadog a deploy failure
+notify\:deploy-failure: verify-env
+	@envsubst < $(MAKEFILE_DIR)/modules/datadog/deploy-failure.json | $(CURL)

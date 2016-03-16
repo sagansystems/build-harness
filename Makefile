@@ -21,6 +21,8 @@ endif
 # Include the docker-specific targets
 include $(MAKEFILE_DIR)/modules/Makefile.docker
 
+include $(MAKEFILE_DIR)/modules/Makefile.datadog
+
 .PHONY : help env deps
 
 .DEFAULT_GOAL := help
