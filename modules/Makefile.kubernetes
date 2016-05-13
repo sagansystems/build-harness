@@ -18,6 +18,7 @@ KUBECTL_SSH_TUNNEL ?= $(KUBECTL_SSH_USER)@$(CLUSTER_BASTION)
 SERIAL ?= $(shell echo -n $$(date +%s) | tail -c 5)
 export SERIAL
 
+# Specify DEBUG=/dev/stderr to get useful output to stderr 
 DEBUG ?= /dev/null
 
 define envsubst 
