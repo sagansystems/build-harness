@@ -18,16 +18,20 @@ KUBECTL_SSH_TUNNEL ?= $(KUBECTL_SSH_USER)@$(CLUSTER_BASTION)
 SERIAL ?= $(shell echo -n $$(date +%s) | tail -c 5)
 export SERIAL
 
+DEBUG ?= /dev/null
+
+define envsubst 
+	envsubst < "$(1)" | envsubst | tee $(DEBUG))
+endef
+
 define kubectl_create
 	@echo -e "INFO: Creating $(KUBERNETES_APP) $(1) on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
-	@[ -z "$(DEBUG)" ] && (envsubst < "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-$(1).yml" | envsubst)
-	@envsubst < "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-$(1).yml" | envsubst | $(KUBECTL_CMD) create $(KUBECTL_SCHEMA_CACHE_DIR) -f -
+	@$(call envsubst,$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-$(1).yml) | $(KUBECTL_CMD) create $(KUBECTL_SCHEMA_CACHE_DIR) -f -
 endef
 
 define kubectl_delete
 	@echo -e "INFO: Deleteting $(KUBERNETES_APP) $(1) on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
-	@[ -z "$(DEBUG)" ] || (envsubst < "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-$(1).yml" | envsubst)
-	@envsubst < "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-$(1).yml" | envsubst | $(KUBECTL_CMD) delete --ignore-not-found=true -f -
+	@$(call envsubst,$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-$(1).yml) $(KUBECTL_CMD) delete --ignore-not-found=true -f -
 endef
 
 ifeq ($(CIRCLECI),true)
@@ -87,10 +91,6 @@ kubernetes\:replace-controller:
 kubernetes\:replace:
 	@$(SELF) kubernetes:replace-service kubernetes:replace-controller
 
-# (private) Create a new deployment
-kubernetes\:create-deployment:
-	$(call kubectl_create,deployment)
-
 # (private) Delete a deploymentt
 kubernetes\:delete-deployment:
 	$(call kubectl_delete,deployment)
@@ -102,8 +102,7 @@ kubernetes\:list-deployments:
 # (private) Update existing controller using rolling-update or create a new controller; do not notify datadog
 kubernetes\:apply-deployment:
 	@echo -e "INFO: Applying updates to $(KUBERNETES_APP) deployment on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
-	@[ -z "$(DEBUG)" ] || (envsubst < "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-deployment.yml" | envsubst)
-	@envsubst < "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-deployment.yml" | envsubst | \
+	@$(call envsubst,$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-deployment.yml) \
       $(KUBECTL_CMD) apply --record=false $(KUBECTL_SCHEMA_CACHE_DIR) -f -
 	@$(SELF) kubernetes:list-deployments kubernetes:list-rs
 
@@ -123,8 +122,7 @@ kubernetes\:deploy-controller:
 		$(SELF) kubernetes:create-controller; \
   else \
 		echo -e "INFO: Performing Rolling Update on $(KUBERNETES_APP) on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."; \
-	  [ -z "$(DEBUG)" ] || (envsubst < "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-controller.yml" | envsubst); \
-	  envsubst < "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-controller.yml" | envsubst | \
+	  $(call envsubst,$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-controller.yml) \
 		$(KUBECTL_CMD) rolling-update $$CURRENT_CONTROLLER_NAME $(KUBECTL_SCHEMA_CACHE_DIR) -f - ; \
 	fi
 	@$(SELF) kubernetes:list-rc
