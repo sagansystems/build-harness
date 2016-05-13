@@ -96,24 +96,16 @@ kubernetes\:replace:
 kubernetes\:delete-deployment:
 	$(call kubectl_delete,deployment)
 
-## Show deployment history
-kubernetes\:list-deployments:
-	@echo -e "INFO: Listing deployments of $(KUBERNETES_APP) on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
-	@$(KUBECTL_CMD) rollout history deployment $(KUBERNETES_APP)
-
 # (private) Update existing controller using rolling-update or create a new controller; do not notify datadog
 kubernetes\:apply-deployment:
 	@echo -e "INFO: Applying updates to $(KUBERNETES_APP) deployment on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
 	@$(call envsubst,$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-deployment.yml) | \
       $(KUBECTL_CMD) apply --record=false $(KUBECTL_SCHEMA_CACHE_DIR) -f -
-	@$(SELF) kubernetes:list-deployments kubernetes:list-rs
 
 ## Rollback to previous deployment
 kubernetes\:undo-deployment:
 	@echo -e "INFO: Rolling back to previous deployment of $(KUBERNETES_APP) on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
 	@$(KUBECTL_CMD) rollout undo deployment $(KUBERNETES_APP)
-	@$(SELF) kubernetes:list-deployments kubernetes:list-rs
-
 
 # (private) Update existing controller using rolling-update or create a new controller; do not notify datadog
 kubernetes\:deploy-controller:
@@ -164,3 +156,10 @@ kubernetes\:list-rs:
 kubernetes\:list-svc:
 	@echo -e "INFO: Listing services on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
 	@$(KUBECTL_CMD) get svc
+
+## Show deployment history
+kubernetes\:list-deployments:
+	@echo -e "INFO: Listing deployments of $(KUBERNETES_APP) on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
+	@$(KUBECTL_CMD) rollout history deployment $(KUBERNETES_APP)
+
+
