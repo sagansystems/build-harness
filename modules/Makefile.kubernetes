@@ -32,7 +32,7 @@ endef
 
 define kubectl_delete
 	@echo -e "INFO: Deleteting $(KUBERNETES_APP) $(1) on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
-	@$(call envsubst,$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-$(1).yml) $(KUBECTL_CMD) delete --ignore-not-found=true -f -
+	@$(call envsubst,$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-$(1).yml) | $(KUBECTL_CMD) delete --ignore-not-found=true -f -
 endef
 
 ifeq ($(CIRCLECI),true)
@@ -103,7 +103,7 @@ kubernetes\:list-deployments:
 # (private) Update existing controller using rolling-update or create a new controller; do not notify datadog
 kubernetes\:apply-deployment:
 	@echo -e "INFO: Applying updates to $(KUBERNETES_APP) deployment on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
-	@$(call envsubst,$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-deployment.yml) \
+	@$(call envsubst,$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-deployment.yml) | \
       $(KUBECTL_CMD) apply --record=false $(KUBECTL_SCHEMA_CACHE_DIR) -f -
 	@$(SELF) kubernetes:list-deployments kubernetes:list-rs
 
@@ -123,7 +123,7 @@ kubernetes\:deploy-controller:
 		$(SELF) kubernetes:create-controller; \
   else \
 		echo -e "INFO: Performing Rolling Update on $(KUBERNETES_APP) on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."; \
-	  $(call envsubst,$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-controller.yml) \
+	  $(call envsubst,$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-controller.yml) | \
 		$(KUBECTL_CMD) rolling-update $$CURRENT_CONTROLLER_NAME $(KUBECTL_SCHEMA_CACHE_DIR) -f - ; \
 	fi
 	@$(SELF) kubernetes:list-rc
