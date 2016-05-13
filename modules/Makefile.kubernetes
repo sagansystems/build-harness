@@ -98,6 +98,7 @@ kubernetes\:delete-deployment:
 
 ## Show deployment history
 kubernetes\:list-deployments:
+	@echo -e "INFO: Listing deployments of $(KUBERNETES_APP) on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
 	@$(KUBECTL_CMD) rollout history deployment $(KUBERNETES_APP)
 
 # (private) Update existing controller using rolling-update or create a new controller; do not notify datadog
@@ -142,6 +143,7 @@ kubernetes\:deploy-service:
 
 ## Deploy controller and service; notify datadog
 kubernetes\:deploy:
+	@echo -e "INFO: Deploying $(KUBERNETES_APP) resources on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
 	$(NOTIFY_STARTING)
 	@[ ! -f "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-deployment.yml" ] || $(SELF) kubernetes:apply-deployment || $(NOTIFY_FAILURE)
 	@[ ! -f "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-controller.yml" ] || $(SELF) kubernetes:deploy-controller || $(NOTIFY_FAILURE)
@@ -150,12 +152,15 @@ kubernetes\:deploy:
 
 ## List deployed replication controllers
 kubernetes\:list-rc:
+	@echo -e "INFO: Listing replication controllers on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
 	@$(KUBECTL_CMD) get rc
 
 ## List deployed replica sets
 kubernetes\:list-rs:
+	@echo -e "INFO: Listing replica sets on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
 	@$(KUBECTL_CMD) get rs
 
 ## List deployed services
 kubernetes\:list-svc:
+	@echo -e "INFO: Listing services on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
 	@$(KUBECTL_CMD) get svc
