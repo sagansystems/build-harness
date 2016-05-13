@@ -22,7 +22,7 @@ export SERIAL
 DEBUG ?= /dev/null
 
 define envsubst 
-	envsubst < "$(1)" | envsubst | tee $(DEBUG))
+	envsubst < "$(1)" | envsubst | tee $(DEBUG)
 endef
 
 define kubectl_create
