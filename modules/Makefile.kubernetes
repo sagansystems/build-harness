@@ -102,7 +102,7 @@ kubernetes\:apply-deployment:
 	@echo -e "INFO: Applying updates to $(KUBERNETES_APP) deployment on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
 	@$(call envsubst,$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-deployment.yml) | \
       $(KUBECTL_CMD) apply $(KUBECTL_SCHEMA_CACHE_DIR) -f -
-	@$(KUBECTL_CMD) annotate deployment $(KUBERNETES_APP) 'kubernetes.io/change-cause=$(KUBERNETES_ANNOTATION)'
+	@$(KUBECTL_CMD) annotate deployment $(KUBERNETES_APP) "'kubernetes.io/change-cause=$(KUBERNETES_ANNOTATION)'"
 
 ## Rollback to previous deployment
 kubernetes\:undo-deployment:
