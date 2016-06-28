@@ -106,21 +106,20 @@ kubernetes\:deploy:
 	@[ ! -f "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-service.yml" ] || $(SELF) kubernetes:apply-service || $(NOTIFY_FAILURE)
 	$(NOTIFY_SUCCESS)
 
-## List deployed replication controllers
+## List deployed replication controllers for app
 kubernetes\:list-rc:
 	@echo -e "INFO: Listing replication controllers on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
-	@$(KUBECTL_CMD) get rc -L tag
+	@$(KUBECTL_CMD) get rc -L tag --selector app=$(KUBERNETES_APP)
 
-## List deployed replica sets
+## List deployed replica sets for app
 kubernetes\:list-rs:
 	@echo -e "INFO: Listing replica sets on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
-	@$(KUBECTL_CMD) get rs -L tag | grep -Ev '\s+0\s+0\s+'
+	@$(KUBECTL_CMD) get rs -L tag --selector app=$(KUBERNETES_APP) | grep -Ev '\s+0\s+0\s+'
 
-## List deployed pods
+## List deployed pods for app
 kubernetes\:list-pods:
 	@echo -e "INFO: Listing pods on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
-	@$(KUBECTL_CMD) get pods -L tag
-
+	@$(KUBECTL_CMD) get pods -L tag --selector app=$(KUBERNETES_APP)
 
 ## List deployed services
 kubernetes\:list-svc:
