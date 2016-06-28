@@ -108,17 +108,17 @@ kubernetes\:deploy:
 
 ## List deployed replication controllers for app
 kubernetes\:list-rc:
-	@echo -e "INFO: Listing replication controllers on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
+	@echo -e "INFO: Listing replication controllers for $(KUBERNETES_APP) on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
 	@$(KUBECTL_CMD) get rc -L tag --selector app=$(KUBERNETES_APP)
 
 ## List deployed replica sets for app
 kubernetes\:list-rs:
-	@echo -e "INFO: Listing replica sets on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
+	@echo -e "INFO: Listing replica sets for $(KUBERNETES_APP) on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
 	@$(KUBECTL_CMD) get rs -L tag --selector app=$(KUBERNETES_APP) | grep -Ev '\s+0\s+0\s+'
 
 ## List deployed pods for app
 kubernetes\:list-pods:
-	@echo -e "INFO: Listing pods on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
+	@echo -e "INFO: Listing pods for $(KUBERNETES_APP) on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
 	@$(KUBECTL_CMD) get pods -L tag --selector app=$(KUBERNETES_APP)
 
 ## List deployed services
