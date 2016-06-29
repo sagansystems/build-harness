@@ -30,6 +30,7 @@ circle\:tag:
 	@$(SELF) docker:login
 	@echo "INFO: Tagging $(BUILD)"
 	@$(SELF) DOCKER_TAG=$(BUILD) docker:tag docker:push
+	@$(SELF) DOCKER_TAG=$(shell git rev-parse HEAD) docker:tag docker:push
 
 ## Tag as latest and push to registry (CircleCI)
 circle\:tag-latest:
