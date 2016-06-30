@@ -87,6 +87,14 @@ docker\:pull: env
 	@echo "INFO: Pulling $(DOCKER_URI)"
 	@$(DOCKER_CMD) pull "$(DOCKER_URI)"
 
+## Pull down the docker image corresponding to the current git hash
+docker\:pull-git-hash:
+	@$(SELF) docker:pull DOCKER_TAG=$(shell git rev-parse HEAD)
+
+## Tag the current docker image with the current git hash
+docker\:tag-git-hash:
+	@$(SELF) docker:tag DOCKER_TAG=$(shell git rev-parse HEAD)
+
 docker\:test:
 	@$(DOCKER_CMD) version 2>&1 >/dev/null | grep 'Error response from daemon'; [ $$? -ne 0 ]
 	@echo "OK"
