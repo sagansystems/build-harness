@@ -68,6 +68,14 @@ kubernetes\:info:
 	@echo -e "SSH Tunnel: $(call yellow,$(KUBECTL_SSH_TUNNEL))"
 	@echo -e "SSH User: $(call yellow,$(KUBECTL_SSH_USER))"
 
+# (private) Delete a horizontalpodautoscaler
+kubernetes\:delete-horizontalpodautoscaler:
+	$(call kubectl_delete,horizontalpodautoscaler)
+
+# (private) Update horizontalpodautoscaler or create, if necessary
+kubernetes\:apply-horizontalpodautoscaler:
+	$(call kubectl_apply,horizontalpodautoscaler)
+
 # (private) Delete a configmap
 kubernetes\:delete-configmap:
 	$(call kubectl_delete,configmap)
@@ -125,6 +133,7 @@ kubernetes\:deploy:
 	@[ ! -f "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-deployment.yml" ] || $(SELF) kubernetes:apply-deployment || $(NOTIFY_FAILURE)
 	@[ ! -f "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-controller.yml" ] || $(SELF) kubernetes:apply-controller || $(NOTIFY_FAILURE)
 	@[ ! -f "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-service.yml" ] || $(SELF) kubernetes:apply-service || $(NOTIFY_FAILURE)
+	@[ ! -f "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-horizontalpodautoscaler.yml" ] || $(SELF) kubernetes:apply-horizontalpodautoscaler || $(NOTIFY_FAILURE)
 	$(NOTIFY_SUCCESS)
 
 ## List deployed replication controllers for app
