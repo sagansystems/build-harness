@@ -36,8 +36,9 @@ circle\:deps:
 circle\:tag:
 	@$(call assert_set,BUILD)
 	@$(SELF) docker:login
-	@echo "INFO: Tagging $(BUILD)"
+	@echo "INFO: Tagging $(COMMIT) as $(BUILD)"
 	@$(SELF) DOCKER_TAG=$(BUILD) docker:tag docker:push
+	@$(SELF) DOCKER_TAG=$(COMMIT) docker:tag docker:push
 
 ## Tag as latest and push to registry (CircleCI)
 circle\:tag-latest:
