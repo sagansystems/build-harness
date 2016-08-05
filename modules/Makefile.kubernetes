@@ -138,7 +138,7 @@ kubernetes\:delete-deployment:
 # (private) Update existing deployment or create, if necessary
 kubernetes\:apply-deployment:
 	$(call kubectl_apply,deployment)
-	@[ "$(KUBECTL_STATUS)" != "true" ] || $(SELF) kubernetes:status
+	@[ "$(KUBECTL_STATUS)" != "true" ] || time $(SELF) kubernetes:status
 
 ## Rollback to previous deployment
 kubernetes\:undo-deployment:
