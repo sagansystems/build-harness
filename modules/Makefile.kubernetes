@@ -135,6 +135,7 @@ kubernetes\:delete-deployment:
 # (private) Update existing deployment or create, if necessary
 kubernetes\:apply-deployment:
 	$(call kubectl_apply,deployment)
+	@$(SELF) kubernetes:status
 
 ## Rollback to previous deployment
 kubernetes\:undo-deployment:
@@ -159,6 +160,10 @@ kubernetes\:delete-job:
 kubernetes\:run-job:
 	@$(SELF) kubernetes:delete-job >/dev/null 2>&1 || true
 	$(call kubectl_create,job)
+
+## Output the status of the deployment
+kubernetes\:status:
+	@$(KUBECTL_CMD) rollout status deployment $(KUBERNETES_APP)
 
 ## List deployed replication controllers for app
 kubernetes\:list-rc:
