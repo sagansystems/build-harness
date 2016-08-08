@@ -78,7 +78,7 @@ kubernetes\:info:
 kubernetes\:validate:
 	@for env in $$(grep -Eo '\$$[A-Z_0-9]+' $(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-configmap.yml | cut -d\$$ -f2); do \
     if [ -z "$${!env}" ]; then \
-      echo "$$env not set"; \
+      echo "$$env not defined in $(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-configmap.yml"; \
       exit 1; \
     fi; \
   done
