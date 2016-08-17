@@ -43,9 +43,8 @@ include $(MAKEFILE_DIR)/modules/Makefile.help
 .DEFAULT_GOAL := help
 
 # (private) Configure all dependencies
-deps:
-	@[ -d $(MAKEFILE_DIR)/bin ] || mkdir -p $(MAKEFILE_DIR)/bin/
-	@[ -z "$(DEPS_TARGETS)" ] || $(SELF) $(DEPS_TARGETS)
+deps::
+	@exit 0
 
 # (private) include environment
 env: deps
