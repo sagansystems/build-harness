@@ -57,9 +57,6 @@ DOCKER_BUILD_OPTS ?=
 
 deps::
 	$(call assert_set DOCKER_CMD)
-	$(call assert_set DOCKER_HOST)
-	$(call assert_set DOCKER_CERT_PATH)
-	@[ -d $(DOCKER_CERT_PATH) ] || (echo "$(DOCKER_CERT_PATH) does not exist"; exit 1)
 	@[ -x $(DOCKER_CMD) ] || (echo "$(DOCKER_CMD) not executable"; exit 1)
 
 ## Display info about the docker environment
@@ -105,7 +102,7 @@ docker\:test:
 docker\:tag:
 	@$(SELF) deps
 	@echo INFO: Tagging $(DOCKER_REPOSITORY):$(DOCKER_BUILD_TAG) as $(DOCKER_URI)
-	@$(DOCKER_CMD) tag -f "$(DOCKER_REPOSITORY):$(DOCKER_BUILD_TAG)" "$(DOCKER_URI)"
+	@$(DOCKER_CMD) tag "$(DOCKER_REPOSITORY):$(DOCKER_BUILD_TAG)" "$(DOCKER_URI)"
 
 ## Remove existing docker images
 docker\:clean:
