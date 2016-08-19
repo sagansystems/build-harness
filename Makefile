@@ -38,15 +38,11 @@ include $(MAKEFILE_DIR)/modules/Makefile.kubernetes
 # Include help targets
 include $(MAKEFILE_DIR)/modules/Makefile.help
 
-.PHONY : help env deps
+.PHONY : help deps
 
 .DEFAULT_GOAL := help
 
 # (private) Configure all dependencies
 deps::
 	@exit 0
-
-# (private) include environment
-env: deps
-	$(eval -include $(MAKEFILE_PATH).env)
 
