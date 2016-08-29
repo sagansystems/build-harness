@@ -50,10 +50,6 @@ define kubectl_delete
 	@$(call envsubst,$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-$(1).yml) | $(KUBECTL_CMD) delete --ignore-not-found=true -f -
 endef
 
-define kubectl_job_logs
-	@$(KUBECTL_CMD) logs -f $(shell $(KUBECTL_CMD) get pods -a -o name | grep $(KUBERNETES_APP))
-endef
-
 ifeq ($(CIRCLECI),true)
   KUBECTL_SSH_CMD += -i '$(HOME)/.ssh/id_circleci_github'
   KUBECTL_SSH_USER ?= saganbot
@@ -170,7 +166,8 @@ kubernetes\:run-job:
 
 ## Show job logs
 kubernetes\:job-logs:
-	$(call kubectl_job_logs)
+	@echo -e "INFO: Job logs for $(KUBERNETES_APP) on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
+	@$(KUBECTL_CMD) logs -f $(shell $(KUBECTL_CMD) get pods -a -o name | grep $(KUBERNETES_APP))
 
 ## Output the status of the deployment
 kubernetes\:status:
