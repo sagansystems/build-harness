@@ -102,7 +102,7 @@ docker\:test:
 docker\:tag:
 	@$(SELF) deps
 	@echo INFO: Tagging $(DOCKER_REPOSITORY):$(DOCKER_BUILD_TAG) as $(DOCKER_URI)
-	@$(DOCKER_CMD) tag -f "$(DOCKER_REPOSITORY):$(DOCKER_BUILD_TAG)" "$(DOCKER_URI)"
+	@$(DOCKER_CMD) tag "$(DOCKER_REPOSITORY):$(DOCKER_BUILD_TAG)" "$(DOCKER_URI)"
 
 ## Remove existing docker images
 docker\:clean:
