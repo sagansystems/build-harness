@@ -13,4 +13,4 @@ fi
 git clone -b $BUILD_HARNESS_BRANCH $GITHUB_REPO
 make -C $BUILD_HARNESS_PROJECT deps circle:deps
 
-
+cat $BUILD_HARNESS_PROJECT/retry.sh >> ~/.bashrc
