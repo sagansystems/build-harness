@@ -21,7 +21,7 @@ export RELEASE
 .PHONY : circle\:tag circle\:release circle\:deps
 
 ## Install CircleCI deps
-circle\:deps: install-deployment-dependencies
+circle\:deps: install-deployment-dependencies build-compatible-go-binaries
 	@echo "Configuring for Circle ${CIRCLE_VERSION}"
 	@cat $(MAKEFILE_DIR)/retry.sh >> ~/.bashrc
 
@@ -88,3 +88,7 @@ ifdef APT_GET_EXISTS
 	@echo "Installing deployment dependencies"
 	@sudo apt-get install -y --no-install-recommends gettext
 endif
+
+# Ensure linux binaries are compatible
+build-compatible-go-binaries:
+	@echo 'export CGO_ENABLED=0' >> $BASH_ENV
