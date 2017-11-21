@@ -12,9 +12,6 @@ COMMIT ?= $(CIRCLE_SHA1)
 RELEASE ?= release-$(TIMESTAMP)
 DOCKER_BUILD_OPTS += --build-arg build=$(BUILD) --build-arg commit=$(COMMIT)
 
-# Look for apt-get
-APT_GET_EXISTS := $(shell command -v apt-get 2> /dev/null)
-
 export COMMIT
 export RELEASE
 
@@ -84,10 +81,7 @@ circle\:run-job-kubernetes:
 
 ## Install deployment dependencies
 install-deployment-dependencies:
-ifdef APT_GET_EXISTS
-	@echo "Installing deployment dependencies"
-	@sudo apt-get install -y --no-install-recommends gettext
-endif
+	@(! which -s apt-get || which -s gettext) || (echo "Installing deployment dependencies" && sudo apt-get install -y --no-install-recommends gettext)
 
 # Ensure linux binaries are compatible
 build-compatible-go-binaries:
