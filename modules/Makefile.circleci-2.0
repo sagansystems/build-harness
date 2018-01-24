@@ -18,7 +18,7 @@ export RELEASE
 .PHONY : circle\:tag circle\:release circle\:deps
 
 ## Install CircleCI deps
-circle\:deps:
+circle\:deps: install-deployment-dependencies build-compatible-go-binaries
 	@echo "Configuring for Circle ${CIRCLE_VERSION}"
 	@cat $(MAKEFILE_DIR)/retry.sh >> ~/.bashrc
 
@@ -64,7 +64,7 @@ circle\:cleanup-docker:
 	@echo "INFO: Running Docker garbage collection"
 	@docker run -e FORCE_IMAGE_REMOVAL=1 -e GRACE_PERIOD_SECONDS=86400 -e MINIMUM_IMAGES_TO_SAVE=1 --rm -v /var/run/docker.sock:/var/run/docker.sock spotify/docker-gc || true
 	@echo "INFO: Docker disk usage after cleanup"
-	@docker system df -v 
+	@docker system df -v
 
 ## Run job on kubernetes after obtaining an exclusive lock
 circle\:run-job-kubernetes:
@@ -78,3 +78,11 @@ circle\:run-job-kubernetes:
 	  echo "INFO: Running $(JOB_KUBERNETES_APP):$(IMAGE_TAG)"; \
 	  $(MAKEFILE_DIR)/bin/circle-do-exclusively.sh --branch $(CIRCLE_BRANCH) $(SELF) kubernetes:run-job kubernetes:job-logs KUBERNETES_APP=$(JOB_KUBERNETES_APP); \
 	fi
+
+## Install deployment dependencies
+install-deployment-dependencies:
+	@(! which -s apt-get || which -s gettext) || (echo "Installing deployment dependencies" && sudo apt-get install -y --no-install-recommends gettext)
+
+# Ensure linux binaries are compatible
+build-compatible-go-binaries:
+	@echo 'export CGO_ENABLED=0' >> $BASH_ENV
