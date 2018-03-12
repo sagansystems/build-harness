@@ -39,6 +39,7 @@ define kubectl_create
 	$(call assert,CLUSTER_NAMESPACE)
 	$(call assert,CLUSTER_DOMAIN)
 	@echo -e "INFO: Creating $(KUBERNETES_APP) $(1) on cluster $(call yellow,$(CLUSTER_NAMESPACE))..."
+	@echo -e "INFO: kubectl command is $(KUBECTL_CMD)"
 	@$(call envsubst,$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-$(1).yml) | $(KUBECTL_CMD) create $(KUBECTL_SCHEMA_CACHE_DIR) -f -
 endef
 
