@@ -73,10 +73,6 @@ KUBECTL_CMD ?= $(KUBECTL_SSH_CMD) "$(KUBECTL)" --logtostderr=true --insecure-ski
 ifeq ($(CIRCLE_VERSION),"1.0")
   KUBECTL_SSH_CMD += -i '$(HOME)/.ssh/id_circleci_github'
 endif
-# no ssh needed for Codefresh
-ifdef CF_BUILD_ID
-  KUBECTL_SSH_CMD = ""
-endif
 
 #
 # Reference Docs:
