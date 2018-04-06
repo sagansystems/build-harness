@@ -20,6 +20,7 @@ RUN apk add --no-cache --update bash && \
 RUN mkdir -p ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
 
 ENV BUILD_HARNESS_PATH /gladly/build-harness
+ENV DOCKER_CMD /usr/bin/docker
 
 WORKDIR /gladly/build-harness
 
