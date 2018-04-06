@@ -41,7 +41,7 @@ codefresh\:deploy-kubernetes:
 	## @[ ! -f "$(DOCKER_FILE)" ] || $(SELF) codefresh:tag
 	@$(SELF) kubernetes:info
 	@echo -e "$(call red,WARN:) Deploying $(IMAGE_TAG) without obtaining lock"
-	@$(SELF) kubernetes:configure kubernetes:deploy KUBERNETES_ANNOTATION="$(RELEASE): $(BUILD) - commit $(COMMIT)"; \
+	@$(SELF) kubernetes:configure kubernetes:deploy KUBERNETES_ANNOTATION="$(RELEASE): $(BUILD) - commit $(COMMIT)"
 	@sleep 3
 	@$(SELF) kubernetes:list-deployments kubernetes:list-rs kubernetes:list-pods
 
