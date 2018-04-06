@@ -41,7 +41,7 @@ codefresh\:deploy-kubernetes:
 	@$(SELF) kubernetes:list-deployments kubernetes:list-rs kubernetes:list-pods
 
 ## Tag image as [branch]-docker-latest and deploy to the cluster
-codefresh\:tag-deploy-cluster: deps
+codefresh\:tag-deploy-cluster: codefresh\:deps
 	@kubectl config set-context $(CODEFRESH_KUBERNETES_CONTEXT) --namespace=$(KUBECTL_NAMESPACE)
 	@kubectl config use-context $(CODEFRESH_KUBERNETES_CONTEXT)
 	@$(SELF) codefresh:git-tag-docker-latest
