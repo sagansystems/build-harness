@@ -170,8 +170,6 @@ Here's a minimal example of what is needed for CircleCI. Add/merge the following
       - CLUSTER_NAMESPACE=master
       - CLUSTER_DOMAIN=gladly.qa
       - IMAGE_TAG=${{CF_BRANCH_TAG_NORMALIZED}}-${{CF_SHORT_REVISION}}
-      - KUBECTL=/usr/local/bin/kubectl
-      - KUBECTL_CMD=/usr/local/bin/kubectl
     commands:
       - make codefresh:tag-deploy-cluster
     when:
