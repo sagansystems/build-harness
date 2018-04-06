@@ -1,12 +1,13 @@
 export CODEFRESH_VERSION = "1.0"
 
-.PHONY : codefresh\:git-tag-docker-latest codefresh\:deploy-kubernetes codefresh\:tag-deploy-master
+.PHONY : codefresh\:git-tag-docker-latest codefresh\:deploy-kubernetes codefresh\:tag-deploy-cluster
 
 COMMIT ?= $(CF_REVISION)
 BUILD ?= $(CF_BRANCH_TAG_NORMALIZED)-$(CF_SHORT_REVISION)
 KUBECTL_NAMESPACE ?= sagan
+CODEFRESH_KUBERNETES_CONTEXT ?= $(CLUSTER_NAMESPACE)-$(subst .,-,$(CLUSTER_DOMAIN))
 
-## Tag as master-docker-latest in git
+## Tag as [branch]-docker-latest in git
 codefresh\:git-tag-docker-latest:
 	@echo "INFO: Tagging git branch docker-latest"
 	@git fetch --tags
@@ -32,9 +33,9 @@ codefresh\:deploy-kubernetes:
 	@sleep 3
 	@$(SELF) kubernetes:list-deployments kubernetes:list-rs kubernetes:list-pods
 
-## Tag image as master-docker-latest and deploy to master cluster
-codefresh\:tag-deploy-master:
-	@kubectl config set-context master-gladly-qa --namespace=$(KUBECTL_NAMESPACE)
-	@kubectl config use-context master-gladly-qa
+## Tag image as [branch]-docker-latest and deploy to the cluster
+codefresh\:tag-deploy-cluster:
+	@kubectl config set-context $(CODEFRESH_KUBERNETES_CONTEXT) --namespace=$(KUBECTL_NAMESPACE)
+	@kubectl config use-context $(CODEFRESH_KUBERNETES_CONTEXT)
 	@$(SELF) codefresh:git-tag-docker-latest
 	@$(SELF) codefresh:deploy-kubernetes
