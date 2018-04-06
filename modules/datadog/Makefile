@@ -15,8 +15,8 @@ define datadog_notify_deploy
 	$(call assert,DATADOG_API_KEY)
 	$(call assert,CLUSTER_NAMESPACE)
 	$(call assert,IMAGE_TAG)
-	$(call assert,CIRCLE_BUILD_NUM)
-	$(call assert,CIRCLE_BRANCH)
+	$(call assert,CI_BUILD_NUM)
+	$(call assert,CI_BRANCH)
 	@envsubst < $(MAKEFILE_DIR)/modules/datadog/$(1).json | $(CURL)
 endef
 

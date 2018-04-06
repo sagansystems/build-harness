@@ -7,8 +7,9 @@ BUILD ?= $(CF_BRANCH_TAG_NORMALIZED)-$(CF_SHORT_REVISION)
 KUBECTL_NAMESPACE ?= sagan
 CODEFRESH_KUBERNETES_CONTEXT ?= $(CLUSTER_NAMESPACE)-$(subst .,-,$(CLUSTER_DOMAIN))
 DOCKER_BUILD_OPTS += --build-arg build=$(BUILD) --build-arg commit=$(COMMIT)
-export CIRCLE_BUILD_NUM ?= $(CF_BUILD_ID) # no concept of build number on Codefresh, faking for now
-export CIRCLE_BRANCH ?= $(CF_BRANCH_TAG_NORMALIZED)
+
+export CI_BUILD_NUM ?= $(CF_BUILD_ID)
+export CI_BRANCH ?= $(CF_BRANCH_TAG_NORMALIZED)
 
 ## Install Codefresh deps
 codefresh\:deps:
