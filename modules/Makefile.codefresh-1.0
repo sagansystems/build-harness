@@ -11,7 +11,7 @@ CODEFRESH_KUBERNETES_CONTEXT ?= $(CLUSTER_NAMESPACE)-$(subst .,-,$(CLUSTER_DOMAI
 codefresh\:deps:
 	@echo "Configuring for Codefresh ${CODEFRESH_VERSION}"
 	@echo "INFO: Installing GitHub SSH key"
-	@echo -e $SSH_KEY > ~/.ssh/id_rsa
+	@echo -e $(SSH_KEY) > ~/.ssh/id_rsa
 	@chmod 600 ~/.ssh/id_rsa
 	@echo "INFO: Configuring github for ssh access"
 	@echo -e "[url \"ssh://git@github.com:\"]\\n\\tinsteadOf = https://github.com" >> ~/.gitconfig
