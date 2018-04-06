@@ -13,6 +13,8 @@ codefresh\:deps:
 	@echo "INFO: Installing GitHub SSH key"
 	@echo -e $SSH_KEY > ~/.ssh/id_rsa
 	@chmod 600 ~/.ssh/id_rsa
+	@echo "INFO: Configuring github for ssh access"
+	@echo -e "[url \"ssh://git@github.com:\"]\\n\\tinsteadOf = https://github.com" >> ~/.gitconfig
 
 ## Tag as [branch]-docker-latest in git
 codefresh\:git-tag-docker-latest:
