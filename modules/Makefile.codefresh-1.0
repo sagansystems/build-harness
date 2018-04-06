@@ -1,11 +1,18 @@
 export CODEFRESH_VERSION = "1.0"
 
-.PHONY : codefresh\:git-tag-docker-latest codefresh\:deploy-kubernetes codefresh\:tag-deploy-cluster
+.PHONY : codefresh\:deps codefresh\:git-tag-docker-latest codefresh\:deploy-kubernetes codefresh\:tag-deploy-cluster
 
 COMMIT ?= $(CF_REVISION)
 BUILD ?= $(CF_BRANCH_TAG_NORMALIZED)-$(CF_SHORT_REVISION)
 KUBECTL_NAMESPACE ?= sagan
 CODEFRESH_KUBERNETES_CONTEXT ?= $(CLUSTER_NAMESPACE)-$(subst .,-,$(CLUSTER_DOMAIN))
+
+## Install Codefresh deps
+codefresh\:deps:
+	@echo "Configuring for Codefresh ${CODEFRESH_VERSION}"
+	@echo "INFO: Installing GitHub SSH key"
+	@echo -e $SSH_KEY > ~/.ssh/id_rsa
+	@chmod 600 ~/.ssh/id_rsa
 
 ## Tag as [branch]-docker-latest in git
 codefresh\:git-tag-docker-latest:
@@ -34,7 +41,7 @@ codefresh\:deploy-kubernetes:
 	@$(SELF) kubernetes:list-deployments kubernetes:list-rs kubernetes:list-pods
 
 ## Tag image as [branch]-docker-latest and deploy to the cluster
-codefresh\:tag-deploy-cluster:
+codefresh\:tag-deploy-cluster: deps
 	@kubectl config set-context $(CODEFRESH_KUBERNETES_CONTEXT) --namespace=$(KUBECTL_NAMESPACE)
 	@kubectl config use-context $(CODEFRESH_KUBERNETES_CONTEXT)
 	@$(SELF) codefresh:git-tag-docker-latest
