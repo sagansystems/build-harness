@@ -19,7 +19,7 @@ codefresh\:deps:
 
 ## Tag as [branch]-docker-latest in git
 codefresh\:git-tag-docker-latest:
-	@echo "INFO: Tagging git branch docker-latest"
+	@echo "INFO: Tagging git $(COMMIT) as $(CF_BRANCH_TAG_NORMALIZED)-docker-latest"
 	@git fetch --tags
 	@git tag --force "$(CF_BRANCH_TAG_NORMALIZED)-docker-latest"
 	@git push origin --force "tags/$(CF_BRANCH_TAG_NORMALIZED)-docker-latest"
@@ -36,7 +36,7 @@ codefresh\:tag:
 codefresh\:deploy-kubernetes:
 	$(call assert,IMAGE_TAG)
 	$(call assert,CF_BRANCH_TAG_NORMALIZED)
-	@[ ! -f "$(DOCKER_FILE)" ] || $(SELF) codefresh:tag
+	## @[ ! -f "$(DOCKER_FILE)" ] || $(SELF) codefresh:tag
 	@$(SELF) kubernetes:info
 	@echo -e "$(call red,WARN:) Deploying $(IMAGE_TAG) without obtaining lock"
 	@$(SELF) kubernetes:configure kubernetes:deploy KUBERNETES_ANNOTATION="$(RELEASE): $(BUILD) - commit $(COMMIT)"; \
