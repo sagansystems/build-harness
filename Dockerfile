@@ -6,7 +6,9 @@ RUN apk add --no-cache --update bash && \
     apk add ca-certificates && update-ca-certificates && \
     apk add openssh && \
     apk add make && \
+    apk add gettext && \
     apk add docker && \
+    apk add which && \
     apk add curl && \
     curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBE_VERSION}/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl && \
     chmod +x /usr/local/bin/kubectl && \
