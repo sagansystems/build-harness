@@ -35,13 +35,14 @@ codefresh\:tag:
 	@$(SELF) DOCKER_TAG=$(COMMIT) docker:tag docker:push
 
 
-## Deploy to kubernetes after obtaining an exclusive lock
+## Deploy to kubernetes
 codefresh\:deploy-kubernetes:
 	$(call assert,IMAGE_TAG)
 	$(call assert,CF_BRANCH_TAG_NORMALIZED)
+	$(call assert,COMMIT)
 	## @[ ! -f "$(DOCKER_FILE)" ] || $(SELF) codefresh:tag
 	@$(SELF) kubernetes:info
-	@echo -e "$(call red,WARN:) Deploying $(IMAGE_TAG) without obtaining lock"
+	@echo -e "INFO: Deploying $(IMAGE_TAG)"
 	@$(SELF) kubernetes:configure kubernetes:deploy KUBERNETES_ANNOTATION="$(RELEASE): $(BUILD) - commit $(COMMIT)"
 	@sleep 3
 	@$(SELF) kubernetes:list-deployments kubernetes:list-rs kubernetes:list-pods

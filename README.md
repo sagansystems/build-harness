@@ -41,6 +41,14 @@ Run `make help` to get a list of available build targets
   circle:tag                Tag and push to registry (CircleCI)
   circle:release            Tag and push official release to registry (CircleCI)
   circle:cleanup-docker     Cleanup Docker images from CircleCI Docker cache. Calling it once in workflow (for example in the "build" job) should be enough.
+
+# Targets Available on Codefresh
+
+  codefresh:deps                      Install Codefresh deps
+  codefresh:git-tag-docker-latest     Tag as [branch]-docker-latest in git
+  codefresh:tag                       Tag using BUILD version and push to registry
+  codefresh:deploy-kubernetes         Deploy to kubernetes
+  codefresh:tag-deploy-cluster        Tag image as [branch]-docker-latest and deploy to the cluster
 ```
 
 ## Setting up your development environment
@@ -158,9 +166,9 @@ workflows:
 
 ## Codefresh Integration
 
-CircleCI will use the `codefresh` tag of build-harness. Once your build-harness change is merged into master, please advance the `codefresh` tag. You can also temporarily tag your branch with this tag to test your changes.
+Codefresh will use the `codefresh` tag of build-harness. Once your build-harness change is merged into master, please advance the `codefresh` tag. You can also temporarily tag your branch with this tag to test your changes.
 
-Here's a minimal example of what is needed for CircleCI. Add/merge the following to your projects `codefresh.yml` file.
+Here's a minimal example of what is needed for Codefresh. Add/merge the following to your projects `codefresh.yml` file.
 ```yaml
   deploy_master:
     title: Deploy to master
