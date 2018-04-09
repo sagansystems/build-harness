@@ -8,8 +8,14 @@ KUBECTL_NAMESPACE ?= sagan
 CODEFRESH_KUBERNETES_CONTEXT ?= $(CLUSTER_NAMESPACE)-$(subst .,-,$(CLUSTER_DOMAIN))
 DOCKER_BUILD_OPTS += --build-arg build=$(BUILD) --build-arg commit=$(COMMIT)
 
+# Calculate timestamp exactly once at first evaluation
+TIMESTAMP := $(shell date -u +'%Y%m%d%H%M%SZ')
+RELEASE ?= release-$(TIMESTAMP)
+
 export CI_BUILD_NUM ?= $(CF_BUILD_ID)
 export CI_BRANCH ?= $(CF_BRANCH_TAG_NORMALIZED)
+export COMMIT
+export RELEASE
 
 ## Install Codefresh deps
 codefresh\:deps:
