@@ -78,6 +78,8 @@ endif
 #  - https://cloud.google.com/container-engine/docs/kubectl/
 #
 ## Bring up SSH tunnel for kubernetes commands, must be called before executing any targets
+## Skip on Codefresh indicated when CF_BUILD_ID is present
+## We skip tunnel up on Codefresh because it has direct access to kubernetes
 kubernetes\:tunnel-up:
 	@if [ -z "$(CF_BUILD_ID)" ]; then \
 		echo "Please authenticate using your MFA device..."; \
@@ -85,6 +87,8 @@ kubernetes\:tunnel-up:
 	fi;
 
 ## Tear down kubernetes SSH tunnel, must be called after executing other targets
+## Skip on Codefresh indicated when CF_BUILD_ID is present
+## We skip tunnel up on Codefresh because it has direct access to kubernetes
 kubernetes\:tunnel-down:
 	@if [ -z "$(CF_BUILD_ID)" ]; then \
 		[ -e $(KUBECTL_SSH_SOCK) ] && ssh -S $(KUBECTL_SSH_SOCK) -O exit $(KUBECTL_SSH_TUNNEL); \
