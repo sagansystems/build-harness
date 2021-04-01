@@ -113,7 +113,7 @@ kubernetes\:apply-service:
 	$(call kubectl_apply,service,--force)
 
 # (private) Update service-account or create, if necessary
-kubernetes\:apply-service:
+kubernetes\:apply-service-account:
 	$(call kubectl_apply,service-account,--force)
 
 # (private) Update service or create, if necessary
