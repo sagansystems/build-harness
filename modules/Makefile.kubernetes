@@ -112,6 +112,10 @@ kubernetes\:delete-service:
 kubernetes\:apply-service:
 	$(call kubectl_apply,service,--force)
 
+# (private) Update service-account or create, if necessary
+kubernetes\:apply-service-account:
+	$(call kubectl_apply,service-account,--force)
+
 # (private) Update service or create, if necessary
 kubernetes\:apply-cronjob:
 	$(call kubectl_apply,cronjob,--force)
@@ -155,6 +159,7 @@ kubernetes\:deploy:
 	@[ ! -f "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-deployment.yml" ] || $(SELF) kubernetes:apply-deployment || $(NOTIFY_FAILURE)
 	@[ ! -f "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-controller.yml" ] || $(SELF) kubernetes:apply-controller || $(NOTIFY_FAILURE)
 	@[ ! -f "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-service.yml" ] || $(SELF) kubernetes:apply-service || $(NOTIFY_FAILURE)
+	@[ ! -f "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-service-account.yml" ] || $(SELF) kubernetes:apply-service-account || $(NOTIFY_FAILURE)
 	@[ ! -f "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-horizontalpodautoscaler.yml" ] || $(SELF) kubernetes:apply-horizontalpodautoscaler || $(NOTIFY_FAILURE)
 	@[ ! -f "$(KUBERNETES_RESOURCE_PATH)/$(KUBERNETES_APP)-cronjob.yml" ] || $(SELF) kubernetes:apply-cronjob || $(NOTIFY_FAILURE)
 	$(NOTIFY_SUCCESS)
