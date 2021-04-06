@@ -2,20 +2,13 @@ FROM alpine:3.12
 
 ARG KUBE_VERSION="v1.16.10"
 
-RUN apk add --no-cache --update bash && \
-    apk add ca-certificates && update-ca-certificates && \
-    apk add openssh && \
-    apk add make && \
-    apk add gettext && \
-    apk add docker && \
-    apk add which && \
-    apk add curl && \
+RUN apk add --no-cache --update bash ca-certificates openssh make gettext \
+    docker which curl coreutils git && \
+    update-ca-certificates && \
     curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBE_VERSION}/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl && \
     chmod +x /usr/local/bin/kubectl && \
-    apk add git && \
     apk upgrade --no-cache && \
     # Cleanup uncessary files
-    rm /var/cache/apk/* && \
     rm -rf /tmp/*
 
 
