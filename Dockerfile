@@ -1,8 +1,8 @@
 FROM alpine:3.12
 
 ARG KUBE_VERSION="v1.16.10"
-ENV AWS_DEFAULT_REGION us-west-1
-ENV AWSCLI_VERSION 1.14.50
+ENV AWS_DEFAULT_REGION us-west-2
+ENV AWSCLI_VERSION 1.19.107
 
 RUN apk add --no-cache --update bash ca-certificates openssh make gettext \
     python3 py3-pip \
