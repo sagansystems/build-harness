@@ -1,4 +1,4 @@
-FROM alpine:3.12
+FROM alpine:3.15
 
 ARG KUBE_VERSION="v1.16.10"
 ENV AWS_DEFAULT_REGION us-west-2
