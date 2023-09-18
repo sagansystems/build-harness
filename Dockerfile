@@ -2,7 +2,7 @@ FROM alpine:3.15
 
 ARG KUBE_VERSION="v1.23.4"
 ENV AWS_DEFAULT_REGION us-west-2
-ENV AWSCLI_VERSION 1.22.73
+ENV AWSCLI_VERSION 1.29.50
 
 RUN apk add --no-cache --update bash ca-certificates jq openssh make gettext \
     python3 py3-pip \
