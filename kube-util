@@ -160,18 +160,19 @@ function tail_job() {
 	    echo "Job Status: $job_stats"
 	done
 	echo -e "Job logs for $job:\n"
-	kubectl --namespace=${KUBERNETES_NAMESPACE} logs -f `kubectl get pods -l job-name=$job -o name`
-	local num='^[0-9]+$$'
+	kubectl --namespace=${KUBERNETES_NAMESPACE} logs -f jobs/$job
+    local num='^[0-9]+$$'
     local exit_code
-	while ! [[ $exit_code =~ $num ]]; do
-		sleep 1
-		exit_code=`kubectl --namespace=${KUBERNETES_NAMESPACE} get pods -l job-name=$job -o jsonpath={.items..status.containerStatuses[0]..exitCode} 2>&1`
-		if [[ $exit_code = "No resources found." ]]; then
-			echo "failed to find job exit code"
-			exit 1
-		fi
-	done
-	exit $EXIT_CODE
+    while ! [[ $exit_code =~ $num ]]; do
+        echo "Unexpected exit code ($exit_code), trying logs again..."
+        sleep 1
+        exit_code=`kubectl --namespace=${KUBERNETES_NAMESPACE} get pods -l job-name=$job -o jsonpath={.items..status.containerStatuses[0]..exitCode} 2>&1`
+        if [[ $exit_code = "No resources found." ]]; then
+            echo "failed to find job exit code"
+            exit 1
+        fi
+    done
+    exit $EXIT_CODE
 }
 
 which kubectl >/dev/null
