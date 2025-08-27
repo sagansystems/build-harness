@@ -18,4 +18,9 @@ jobs:
     with:
       dockerhub-repository: build-harness
       push: ${{ github.event_name != 'pull_request' }}
-    secrets: inherit
+      use-ssh: true
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      SSH_PRIVATE_KEY: |
+        ${{ secrets.SAGANBOT_SSH_PRIVATE_KEY }}
