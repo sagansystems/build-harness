@@ -36,8 +36,10 @@ jobs:
         with:
           images: sagan/build-harness
           tags: |
-            # branch tag (auto-normalizes: lowercases, replaces /)
             type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
             # latest on master/main only
             type=raw,value=latest,enable=${{ github.ref_name == 'master' || github.ref_name == 'main' }}
 
