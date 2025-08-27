@@ -11,7 +11,7 @@ on:
 
 jobs:
   build-dockerhub-image:
-    uses: sagansystems/gladly-github-actions/.github/workflows/build-dockerhub-image.yaml@master
+    uses: sagansystems/gladly-github-actions/.github/workflows/build-dockerhub-image.yaml@v1
     with:
       dockerhub-repository: build-harness
       push: ${{ github.event_name != 'pull_request' }}
