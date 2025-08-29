@@ -19,6 +19,24 @@ export SERIAL
 # Specify DEBUG=/dev/stderr to get useful output to stderr
 DEBUG ?= /dev/null
 
+# Dry run support - check for DRY_RUN or DRYRUN environment variables
+# Supports truthy values: True|true|1|YES|yes|Y|y
+ifneq ($(DRY_RUN),)
+  ifeq ($(shell echo "$(DRY_RUN)" | grep -E '^(True|true|1|YES|yes|Y|y)$$'),$(DRY_RUN))
+    KUBECTL_DRY_RUN_FLAG := --dry-run=server
+  else
+    KUBECTL_DRY_RUN_FLAG :=
+  endif
+else ifneq ($(DRYRUN),)
+  ifeq ($(shell echo "$(DRYRUN)" | grep -E '^(True|true|1|YES|yes|Y|y)$$'),$(DRYRUN))
+    KUBECTL_DRY_RUN_FLAG := --dry-run=server
+  else
+    KUBECTL_DRY_RUN_FLAG :=
+  endif
+else
+  KUBECTL_DRY_RUN_FLAG :=
+endif
+
 define envsubst
 	# Optionally load parameters for the kubernetes resources
 	set -a; \
@@ -55,7 +73,7 @@ endif
 
 SSH_PROXY_OPTIONS := -i ~/.tsh/keys/portal.$(CLUSTER)/$(OKTA_USER) -o ProxyCommand='ssh -p 3023 -i ~/.tsh/keys/portal.$(CLUSTER)/$(OKTA_USER) $(KUBECTL_SSH_USER)@portal.$(CLUSTER) -s proxy:bastion.$(CLUSTER):3022' portal.$(CLUSTER)
 
-KUBECTL_CMD ?= "$(KUBECTL)" --logtostderr=true --insecure-skip-tls-verify=true
+KUBECTL_CMD ?= "$(KUBECTL)" --logtostderr=true --insecure-skip-tls-verify=true $(KUBECTL_DRY_RUN_FLAG)
 
 ## Display info about the kubernetes setup
 kubernetes\:info:
