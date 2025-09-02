@@ -7,7 +7,11 @@ on:
   push:
     branches:
       - master
-      
+    tags:
+      - "**"
+  release:
+    types: [published]
+
 permissions:
   contents: read
 
@@ -40,6 +44,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
+            type=ref,event=tag
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             # latest on master/main only
