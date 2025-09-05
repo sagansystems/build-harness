@@ -49,6 +49,7 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             # latest on master/main only
             type=raw,value=latest,enable=${{ github.ref_name == 'master' || github.ref_name == 'main' }}
+            type=raw,value=gha,enable=${{ startsWith(github.ref, 'refs/tags/') }}
 
       - name: Build & Push
         uses: docker/build-push-action@v6
