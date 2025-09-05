@@ -23,7 +23,7 @@ RUN <<EOF
   curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBE_VERSION}/bin/linux/${TARGETARCH:-amd64}/kubectl -o /usr/local/bin/kubectl
   chmod +x /usr/local/bin/kubectl
   apk upgrade --no-cache
-  # Cleanup unncessary files
+  # Cleanup unnecessary files
   rm -rf /tmp/*
 EOF
 
